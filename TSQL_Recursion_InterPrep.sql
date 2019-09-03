@@ -75,3 +75,51 @@ left join
 EmployeeCTE E2
 on 
 E1.managerid = E2.managerid
+----
+
+use  AdventureWorks2008R2;
+
+declare @list varchar(max) = '';
+
+declare @custid int = 14328
+
+select @list = @list + ' ' +RTRIM(cast(SalesOrderId as char))
++','
+from 
+Sales.SalesOrderHeader
+where CustomerID = @custid
+order by SalesOrderID;
+
+select @custid 'CustomerId' , left(@list, len(@list)-1) as orders;
+
+
+create table #Person 
+(
+PersonID int identity(1,1),
+SAL decimal(9,0)
+)
+
+insert into #Person
+values
+(5000),
+(7000),
+(7000)
+
+select * from #Person;
+
+
+
+with CTE as
+(
+
+select * , DENSE_RANK() over (order by SAL DESC) as frequency
+from #Person
+)
+select frequency, count(frequency) from CTE
+having count(frequency) = MAX(count(frequency))
+
+
+
+
+
+
